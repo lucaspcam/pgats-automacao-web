@@ -20,7 +20,7 @@ describe('Drag and Drop and Windows', () => {
     const dataTransfer = new DataTransfer()
 
     cy.contains('A').trigger('dragstart', { dataTransfer })
-    cy.contains('B').trigger('drop', { dataTransfer }).trigger('dragend')
+    cy.contains('B').trigger('drop', { dataTransfer })
 
   });
 });
