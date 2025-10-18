@@ -28,12 +28,6 @@
 */
 
 import userData from '../fixtures/example.json'
-import {
-  getRandomNumber,
-  getRandomEmail
-} from '../support/helpers'
-
-import { faker } from '@faker-js/faker'
 
 import menu from '../modules/menu'
 import login from '../modules/login'

@@ -1,5 +1,10 @@
 import { faker } from '@faker-js/faker'
 
+import {
+  getRandomNumber,
+  getRandomEmail
+} from '../../support/helpers'
+
 class Login {
   preencherFormularioDePreCadastro() {
     const firstName = faker.person.firstName()
