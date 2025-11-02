@@ -1,75 +1,57 @@
-name: Web E2E Tests
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Cypress E2E Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  e2e-tests:
+  cypress-run:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Node version
-      run: node --version
-    
-    - name: Cache Cypress binary
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/Cypress
-        key: cypress-binary-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-          cypress-binary-
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run Cypress tests
-      uses: cypress-io/github-action@v6
-      with:
-        browser: chrome
-        spec: cypress/e2e/trabalho-final.cy.js
-        
-    - name: Upload test results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: cypress-test-results
-        path: |
-          cypress/reports
-          cypress/screenshots
-          cypress/videos
-        retention-days: 30
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
 
-    - name: Generate test report
-      if: always()
-      run: |
-        npm run cy:report || true
-        
-    - name: Deploy test report
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: cypress/reports/html
-        publish_branch: gh-pages
-        keep_files: true
-      
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-binary-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cypress-binary-
 
-      
+      - name: Install dependencies
+        run: npm ci
 
-    
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          spec: cypress/e2e/trabalho-final.cy.js
+
+      - name: Generate test report
+        if: always()
+        run: npm run cy:report
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-test-results
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
+          retention-days: 30
