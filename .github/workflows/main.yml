@@ -22,18 +22,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-
-      - name: Cache Cypress binary
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-binary-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            cypress-binary-
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Create report directories
+        run: |
+          mkdir -p cypress/reports/json
+          mkdir -p cypress/reports/html
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
@@ -43,7 +39,10 @@ jobs:
 
       - name: Generate test report
         if: always()
-        run: npm run cy:report
+        run: |
+          [ -d "cypress/reports/json" ] || mkdir -p cypress/reports/json
+          [ -d "cypress/reports/html" ] || mkdir -p cypress/reports/html
+          npm run cy:report || true
 
       - name: Upload test results
         if: always()
