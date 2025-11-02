@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "cy:clean": "rimraf cypress/reports/* cypress/screenshots/* cypress/videos/*",
+    "cy:run": "cypress run --spec \"cypress/e2e/trabalho-final.cy.js\"",
+    "cy:run-with-report": "npm run cy:clean && npm run cy:run && npm run cy:report",
+    "cy:open": "cypress open",
+    "cy:report": "mochawesome-merge cypress/reports/json/*.json > cypress/reports/json/output.json && marge cypress/reports/json/output.json -f report -o cypress/reports/html"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +20,7 @@
     "cypress-mochawesome-reporter": "^4.0.2",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.3.0"
+    "mochawesome-report-generator": "^6.3.0",
+    "rimraf": "^6.1.0"
   }
 }
